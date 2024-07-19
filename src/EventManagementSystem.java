@@ -8,8 +8,9 @@ public class EventManagementSystem {
     private static final EventDAO eventDAO = new EventDAO();
     private static final ParticipantDAO participantDAO = new ParticipantDAO();
     private static final RegistrationDAO registrationDAO = new RegistrationDAO();
+    private static final Validate validate =new Validate();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         while (true) {
             showMenu();
             int choice = scanner.nextInt();
@@ -90,11 +91,13 @@ public class EventManagementSystem {
         LocalDate date = LocalDate.parse(scanner.nextLine());
         System.out.print("Enter event location: ");
         String location = scanner.nextLine();
+        scanner.nextLine(); // Consume newline
 
         Event event = new Event(0, name, date, location);
         eventDAO.addEvent(event);
         System.out.println("Event added successfully!");
     }
+    
 
     private static void viewEventDetails() throws SQLException {
         System.out.print("Enter event ID: ");
@@ -157,17 +160,25 @@ public class EventManagementSystem {
         System.out.println("Event deleted successfully!");
     }
 
-    private static void registerParticipant() throws SQLException {
+    private static void registerParticipant() throws Exception {
         System.out.print("Enter participant name: ");
         String name = scanner.nextLine();
         System.out.print("Enter participant email: ");
         String email = scanner.nextLine();
         System.out.print("Enter participant phone number: ");
         String phoneNumber = scanner.nextLine();
-
-        Participant participant = new Participant(0, name, email, phoneNumber);
-        participantDAO.addParticipant(participant);
-        System.out.println("Participant registered successfully!");
+        try 
+        {
+        	validate.validateEmail(email);
+        	validate.validatePhone(phoneNumber);
+        	Participant participant = new Participant(0, name, email, phoneNumber);
+            participantDAO.addParticipant(participant);
+            System.out.println("Participant registered successfully!");
+        }
+        finally
+        {
+        	
+        }
     }
 
     private static void viewParticipantDetails() throws SQLException {

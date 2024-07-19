@@ -5,13 +5,12 @@ import java.util.List;
 
 public class EventDAO {
     public void addEvent(Event event) throws SQLException {
-        String query = "INSERT INTO Event (name, date, location, capacity) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Event (name, date, location, capacity) VALUES (?, ?, ?, 0)";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, event.getName());
             statement.setDate(2, Date.valueOf(event.getDate()));
             statement.setString(3, event.getLocation());
-            statement.setInt(4, event.getCapacity());
             statement.executeUpdate();
         }
     }
